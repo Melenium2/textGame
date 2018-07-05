@@ -1,0 +1,36 @@
+body
+{
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  background-color: #D8BFD8;
+}
+
+.form-input
+{
+  width: 100%;
+  max-width: 680px;
+  padding: 15px;
+  margin: auto;
+}
+
+.form-input .form-control
+{
+  position: relative;
+  margin-top: auto;
+  margin-bottom: auto;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+
+#textArea
+{
+  outline: none;
+  cursor: default;
+  user-select: none;
+  width: 680px;
+  height: 300px;
+}
+
