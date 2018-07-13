@@ -1,0 +1,29 @@
+{
+	number: "1"
+	question: "Кто изобрел паскаль"
+	mainAnswer: "паскаль"
+	answer1: "паскаль"
+	answer2: "не паскаль"
+	answer3: "Леголовс"
+	answer4: "Зверолов"
+}
+
+{
+	number: "2"
+	question: "Кто что нибдуь сделал"
+	mainAnswer: "хидан"
+	answer1: "хидан"
+	answer2: "фортарн"
+	answer3: "Тот тип"
+	answer4: "Заповедник"
+}
+
+{
+	number: "3"
+	question: "Здесь долюен быть вопрос"
+	mainAnswer: "Рили"
+	answer1: "Да"
+	answer2: "Нет"
+	answer3: "Вот это круть"
+	answer4: "Рили"
+}

@@ -1,28 +1,81 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="styles/root.css" >
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="styles/root.css" >
+  <link rel="stylesheet" type="text/css" href="styles/modalWindowPause.css" >
+  <link rel="stylesheet" type="text/css" href="styles/modalWindowQuestion.css" >
 </head>
 <body>
   <div class="form-input">
-    <div>
-      <textarea id="textArea" class="form-control" readonly="readonly">
-        
-      </textarea>
+    <div id="textArea" readonly="readonly">
       
-      <progress class="form-control"></progress>
     </div>
-    <div>
-      <input type="text" class="form-control" id="inpText"/>    
+    <div class="block mt-1">
+      <span id="warringText">You have some troubles! May be You type wrong symbol. Try Russian language.</span>
     </div>
-    <div>
-      <button type="button" class="form-control">Stop</button>
-      <button type="button" class="form-control">Start</button>
+    <div class="block mt-1">
+      <input type="text" id="inpText" disabled="disabled"/>  
+      <textarea id="testArea"></textarea>
+    </div>
+    <div class="block mt-2">
+      <button type="button" class="btn" id="btnStop" disabled="disabled">Pause</button>
+      <button type="button" class="btn ml-1" id="btnStart">Start</button>
+    </div>
+    <div class="time-block mr-1 pt-1">
+      <span class="main-time-block"><label>Times left: </label><span class="timer" id="timer">00:00:00</span></span>
     </div>
   </div>
   
+  <!--Modal window 'Pause'-->
+  <a href="#modal-window" hidden="hidden" id="modalTrigger"></a>
+  <div class="overlay" id="modal-window">
+    <div class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1>Pause</h1>
+          <a href="#close" title="close" class="close" id="btnClose">&times;</a>
+        </div>
+        <div class="modal-body">
+          <div id="blockPauseText" class="mt-4"></div>
+        </div>
+        <div class="modal-footer">
+          <span>Developed by Kirill Sedin</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <a href="#modal-window-question" id="modalTriggerQuestion">ggggg</a>
+
+  <!-- Modal window for questions -->
+  <div class="overlay-q" id="modal-window-question">
+    <div class="modal-q">
+      <div class="modal-content-q">
+        <div class="modal-header-q">
+          <h2 id="titleQuestion">Question#123</h2>
+          <a href="#close" title="close" hidden="hidden" class="close-q" id="btnCloseQ">&times;</a>
+        </div>
+        <div class="modal-body-q">
+          <div id="blockQuestionText" class="text-content">Zdes kakoyato neherovie tekst</div>
+          <div class="button-group mt-4">
+            <button type="button" id="answer1" class="btnAnswer btn-q mr-1">Answer1</button>
+            <button type="button" id="answer2" class="btnAnswer btn-q mr-1">Answer2</button>
+            <button type="button" id="answer3" class="btnAnswer btn-q mr-1">Answer3</button>
+            <button type="button" id="answer4" class="btnAnswer btn-q">Answer4</button>
+          </div>
+        </div>
+        <div class="modal-footer-q">
+          <span>Developed by Kirill Sedin</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script src="scripts/textListner.js"></script>
+  <script src="scripts/modalWindowLogic.js"></script>
+  <script src="scripts/timer.js"></script>
 </body>
 </html>

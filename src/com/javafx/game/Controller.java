@@ -1,16 +1,23 @@
 package com.javafx.game;
 
+import com.javafx.game.Helpers.QuestionModel;
+import com.javafx.game.Helpers.QuestionParser;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.html.HTMLTextAreaElement;
+import org.w3c.dom.events.Event;
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.events.EventTarget;
+import org.w3c.dom.html.HTMLButtonElement;
+import org.w3c.dom.html.HTMLDivElement;
+import org.w3c.dom.html.HTMLInputElement;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,10 +28,6 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable
 {
-    @FXML private TextArea textArea;
-    @FXML private TextField textField;
-    @FXML private Button btnStart;
-
     @FXML private WebView webView;
     private WebEngine webEngine;
 
@@ -69,15 +72,15 @@ public class Controller implements Initializable
                     if (document != null)
                     {
                         Element element = document.getElementById("textArea");
-                        if (element instanceof HTMLTextAreaElement)
+                        if (element instanceof HTMLDivElement)
                         {
-                            HTMLTextAreaElement txtArea = (HTMLTextAreaElement) element;
+                            HTMLDivElement txtArea = (HTMLDivElement) element;
                             String content = "";
                             for (String s : textForTextArea)
                             {
                                 content += s + " ";
                             }
-                            txtArea.setValue(content);
+                            txtArea.setTextContent(content);
                             isTreadActive = false;
                         }
                     }
@@ -98,39 +101,113 @@ public class Controller implements Initializable
                 }
             }).start();
         }
+
+        onButtonClicked();
+        onTextChanged();
     }
 
-    @FXML
+
     public void onButtonClicked()
     {
-        textField.setEditable(true);
-        System.out.println("Some message");
-        btnStart.setDisable(true);
+        webEngine = webView.getEngine();
+        webEngine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue == Worker.State.SUCCEEDED)
+                {
+                    Document document = (Document) webEngine.executeScript("document");
+                    EventTarget buttonStop = (EventTarget) document.getElementById("btnStop");
+                    buttonStop.addEventListener("click", new EventListener() {
+                            @Override
+                        public void handleEvent(Event evt) {
+
+                                webEngine.executeScript(" invokeModal(' "+ core.getFirstWord() +" '," +
+                                                                    " ' "+ core.getCountWordsNow() +" '," +
+                                                                    " ' "+ core.getCountOfWords() +" ') ");
+                                webEngine.executeScript("timer('false')");
+                        }
+                    }, false);
+
+                    EventTarget buttonStart = (EventTarget) document.getElementById("btnStart");
+                    buttonStart.addEventListener("click", new EventListener() {
+                        @Override
+                        public void handleEvent(Event evt) {
+                           HTMLInputElement inputElement = (HTMLInputElement) document.getElementById("inpText");
+                           if (inputElement != null)
+                           {
+                               inputElement.setDisabled(false);
+                           }
+                           HTMLButtonElement buttonStopElement = (HTMLButtonElement) document.getElementById("btnStop");
+                           if (buttonStopElement != null)
+                           {
+                               buttonStopElement.setDisabled(false);
+                           }
+                           HTMLButtonElement buttonStartElement = (HTMLButtonElement) document.getElementById("btnStart");
+                           if (buttonStartElement != null)
+                           {
+                               buttonStartElement.setDisabled(true);
+                           }
+
+                           webEngine.executeScript("timer('true')");
+                        }
+                    }, false);
+
+                    EventTarget buttonClose = (EventTarget) document.getElementById("btnClose");
+                    buttonClose.addEventListener("click", new EventListener() {
+                        @Override
+                        public void handleEvent(Event evt) {
+                            webEngine.executeScript("timer('true')");
+                        }
+                    },false);
+                }
+            }
+        });
     }
 
-    @FXML
+
     public void onTextChanged()
     {
-        int lenghtNow;
-        textField.setTextFormatter(core.getTextFromater());
-        System.out.println(textField.getText());
-        if (textField.getText().length() == core.getTextLenght())
-        {
-            System.out.println(textField.getText().length() + " = " + core.getTextLenght());
-            System.out.println(textField.getText() + " " + core.getFirstWord());
-            if (textField.getText().equals(core.getFirstWord()))
-            {
+        webEngine = webView.getEngine();
 
-                textArea.selectRange(0, core.getLenghtNow());
-                System.out.println(textField.getText() + " = " + core.getFirstWord());
-                textField.clear();
-                core.removeFirstWord();
+        webEngine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue == Worker.State.SUCCEEDED)
+                {
+                    Document document = (Document) webEngine.getDocument();
+                    EventTarget inpText = (EventTarget) document.getElementById("inpText");
+                    inpText.addEventListener("input", new EventListener() {
+                        @Override
+                        public void handleEvent(Event evt) {
+                            HTMLInputElement inputElem = (HTMLInputElement) document.getElementById("inpText");
+                            if (inputElem != null)
+                            {
+                                if (inputElem.getValue().length() == core.getTextLenght())
+                                {
+                                    if (inputElem.getValue().equals(core.getFirstWord()))
+                                    {
+                                        webEngine.executeScript(" textAreaChanger(' "+ core.getFirstWord() +" ') ");
+                                        core.removeFirstWord();
+                                        inputElem.setValue("");
+                                    }
+                                    else
+                                    {
+                                        int number = (int) (Math.random()*3)+1;
+                                        System.out.println(number);
+                                        QuestionParser parser = core.getQuestionParser();
+                                        QuestionModel model = parser.getQuestion(number);
+
+                                        webEngine.executeScript("startQuestionModal('"+ model.getNumber() +"'," +
+                                                            " '"+ model.getQuestion() +"', '"+ model.getMainAnswer() +"', '"+ model.getAnswer1() +"', " +
+                                                            "'"+ model.getAnswer2() +"', '"+ model.getAnswer3() +"'," +
+                                                            " '"+ model.getAnswer4() +"' )");
+                                    }
+                                }
+                            }
+                        }
+                    }, false);
+                }
             }
-            else
-            {
-                System.out.println("Not");
-            }
-        }
+        });
     }
-
 }

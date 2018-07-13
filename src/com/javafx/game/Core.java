@@ -1,6 +1,6 @@
 package com.javafx.game;
 
-import javafx.scene.control.TextFormatter;
+import com.javafx.game.Helpers.QuestionParser;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -13,24 +13,24 @@ public class Core
 {
     private BufferedReader reader;
     private ArrayList<String> splitedArrayForGame  = new ArrayList<>();
-    private int lenghtNow;
+    private int countOfWords;
+    private int countWordsNow;
+    private QuestionParser questionParser;
 
 
     public Core() throws FileNotFoundException
     {
         reader = new BufferedReader(new FileReader("text.txt"));
+        questionParser = new QuestionParser();
     }
 
     public void SplitArray(String text)
     {
         String[] splitArray = text.split(" ");
         for (String s : splitArray) {
+            countOfWords++;
             splitedArrayForGame.add(s);
         }
-    }
-
-    public ArrayList<String> getSplitedArrayForGame() {
-        return splitedArrayForGame;
     }
 
     public ArrayList<String> getFileContent()
@@ -51,6 +51,10 @@ public class Core
         return fileArray;
     }
 
+    public QuestionParser getQuestionParser() {
+        return questionParser;
+    }
+
     public Integer getTextLenght()
     {
         return splitedArrayForGame.get(0).length();
@@ -61,37 +65,18 @@ public class Core
         return splitedArrayForGame.get(0);
     }
 
+    public int getCountOfWords() {
+        return countOfWords;
+    }
+
+    public int getCountWordsNow() {
+        return countWordsNow;
+    }
+
     public void removeFirstWord()
     {
+        countWordsNow++;
         splitedArrayForGame.remove(0);
     }
 
-    public int getLenghtNow()
-    {
-        return lenghtNow += getTextLenght()+1;
-    }
-
-    public TextFormatter<String> getTextFromater()
-    {
-        TextFormatter<String> textFormatter = new TextFormatter<String>(change -> {
-            String text = change.getText();
-            if (!change.isContentChange())
-            {
-                return change;
-            }
-            if (text.matches("[а-я|А-Я]*[$&+,:;=?@#|'<>.-^*()%!]*") || text.isEmpty())
-            {
-                return change;
-            }
-
-            return null;
-        });
-
-        return textFormatter;
-    }
-
 }
-
-/**
- * Переписать все под веб
- */
