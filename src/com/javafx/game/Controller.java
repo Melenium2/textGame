@@ -31,8 +31,9 @@ public class Controller implements Initializable
     @FXML private WebView webView;
     private WebEngine webEngine;
 
-    private boolean isTreadActive = true;
-
+    private boolean isTreadActive;
+    private ArrayList<String> fileContent = new ArrayList<>();
+    private int fails = 0;
     private Core core;
 
     @Override
@@ -48,7 +49,7 @@ public class Controller implements Initializable
         }
 
         webEngine = webView.getEngine();
-        File file = new File("D:\\Work\\Java\\src\\templates\\rootTemplate.html");
+        File file = new File("src/templates/rootTemplate.html");
         if (file.canRead())
         {
             URL url = null;
@@ -59,28 +60,39 @@ public class Controller implements Initializable
             }
             webEngine.load(url.toString());
         }
+        try {
+            loadTextContent(core.getFileContent());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
-        ArrayList<String> textForTextArea = core.getFileContent();
+        isGameEnd();
+        onButtonClicked();
+        onTextChanged();
+    }
 
-        if (textForTextArea != null)
+    private void loadTextContent(ArrayList<String> content)
+    {
+        isTreadActive = true;
+        if (content != null)
         {
             Runnable check = () ->{
-                WebEngine webEngine = webView.getEngine();
+                webEngine = webView.getEngine();
                 if (webEngine != null)
                 {
-                    Document document = webEngine.getDocument();
+                    Document document = (Document) webEngine.executeScript("document");
                     if (document != null)
                     {
                         Element element = document.getElementById("textArea");
                         if (element instanceof HTMLDivElement)
                         {
-                            HTMLDivElement txtArea = (HTMLDivElement) element;
-                            String content = "";
-                            for (String s : textForTextArea)
+                            HTMLDivElement txtArea = (HTMLDivElement) document.getElementById("textArea");
+                            String text = "";
+                            for (String s : content)
                             {
-                                content += s + " ";
+                                text += s + " ";
                             }
-                            txtArea.setTextContent(content);
+                            txtArea.setTextContent(text);
                             isTreadActive = false;
                         }
                     }
@@ -101,13 +113,45 @@ public class Controller implements Initializable
                 }
             }).start();
         }
-
-        onButtonClicked();
-        onTextChanged();
     }
 
+    private void isGameEnd()
+    {
+        webEngine = webView.getEngine();
 
-    public void onButtonClicked()
+        webEngine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue == Worker.State.SUCCEEDED) {
+                    Document document = (Document) webEngine.executeScript("document");
+
+                    EventTarget buttonRestart = (EventTarget) document.getElementById("restartGame");
+                    buttonRestart.addEventListener("click", new EventListener() {
+                        @Override
+                        public void handleEvent(Event evt) {
+                            webEngine.executeScript("restartGame()");
+                            fails = 0;
+                            try {
+                                loadTextContent(core.getFileContent());
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, false);
+
+                    EventTarget buttonClose = (EventTarget) document.getElementById("closeGame");
+                    buttonClose.addEventListener("click", new EventListener() {
+                        @Override
+                        public void handleEvent(Event evt) {
+                            System.exit(0);
+                        }
+                    }, false);
+                }
+            }
+        });
+    }
+
+    private void onButtonClicked()
     {
         webEngine = webView.getEngine();
         webEngine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>() {
@@ -165,7 +209,7 @@ public class Controller implements Initializable
     }
 
 
-    public void onTextChanged()
+    private void onTextChanged()
     {
         webEngine = webView.getEngine();
 
@@ -192,10 +236,11 @@ public class Controller implements Initializable
                                     }
                                     else
                                     {
-                                        int number = (int) (Math.random()*3)+1;
-                                        System.out.println(number);
                                         QuestionParser parser = core.getQuestionParser();
+                                        int number = (int) (Math.random()*parser.getQuestionCount())+1;
                                         QuestionModel model = parser.getQuestion(number);
+                                        inputElem.setValue("");
+                                        fails++;
 
                                         webEngine.executeScript("startQuestionModal('"+ model.getNumber() +"'," +
                                                             " '"+ model.getQuestion() +"', '"+ model.getMainAnswer() +"', '"+ model.getAnswer1() +"', " +
@@ -203,6 +248,12 @@ public class Controller implements Initializable
                                                             " '"+ model.getAnswer4() +"' )");
                                     }
                                 }
+                            }
+
+                            if (core.getCountOfWords() == (core.getCountWordsNow())) {
+                                String countOfWords = core.getCountOfWords() + "/" + (core.getCountWordsNow());
+                                webEngine.executeScript("launchFinalModal('"+ countOfWords +"', '" + fails + "')");
+                                webEngine.executeScript("timer('false')");
                             }
                         }
                     }, false);

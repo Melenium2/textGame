@@ -39,6 +39,7 @@ function isAnswerTrue(answer)
   }
   else{
     changeButtonColor(getIndexOfButtonByName(answerForQuestion));
+    document.getElementsByClassName('main-time-block')[0].classList.toggle('active');
     setTime(30);
     setTimeout(function(){
       $("#btnCloseQ")[0].click();
@@ -81,5 +82,30 @@ function clearModal()
     $("#answer"+i).removeAttr("disabled");
     $("#answer"+i).text("");
   }
+}
 
-} 
+function launchFinalModal(countOfWords, fails)
+{
+  $("#modalTriggerEnd")[0].click();
+  $("#playerTime").html($("#timer").html());
+  $("#playerWords").html(countOfWords);
+  $("#playerFails").html(fails);
+  $("#inpText").attr("disabled", 'disabled');
+}
+
+function restartGame()
+{
+  document.getElementById('lblRestart').hidden = false;
+  $("#textArea").html("");
+
+  setTimeout(function(){
+    document.getElementById('lblRestart').hidden = true;
+    $("#btnStop").attr("disabled", 'disabled');
+    $("#btnStart").removeAttr("disabled");
+    $("#timer").html("00:00:00");
+    $("#btnCloseEnd")[0].click();
+  },1500)
+}
+
+
+

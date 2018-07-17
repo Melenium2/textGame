@@ -8,7 +8,7 @@
 </head>
 <body>
   <div class="form-input">
-    <div id="textArea" readonly="readonly">
+    <div id="textArea" readonly="readonly"> <!-- readonly="readonly" -->
       
     </div>
     <div class="block mt-1">
@@ -16,7 +16,6 @@
     </div>
     <div class="block mt-1">
       <input type="text" id="inpText" disabled="disabled"/>  
-      <textarea id="testArea"></textarea>
     </div>
     <div class="block mt-2">
       <button type="button" class="btn" id="btnStop" disabled="disabled">Pause</button>
@@ -46,7 +45,7 @@
     </div>
   </div>
   
-  <a href="#modal-window-question" id="modalTriggerQuestion">ggggg</a>
+  <a href="#modal-window-question" hidden="hidden" id="modalTriggerQuestion">ggggg</a>
 
   <!-- Modal window for questions -->
   <div class="overlay-q" id="modal-window-question">
@@ -54,10 +53,10 @@
       <div class="modal-content-q">
         <div class="modal-header-q">
           <h2 id="titleQuestion">Question#123</h2>
-          <a href="#close" title="close" hidden="hidden" class="close-q" id="btnCloseQ">&times;</a>
         </div>
         <div class="modal-body-q">
           <div id="blockQuestionText" class="text-content">Zdes kakoyato neherovie tekst</div>
+          <a href="#close" title="close" hidden="hidden" class="clos-q" id="btnCloseQ">&times;</a>
           <div class="button-group mt-4">
             <button type="button" id="answer1" class="btnAnswer btn-q mr-1">Answer1</button>
             <button type="button" id="answer2" class="btnAnswer btn-q mr-1">Answer2</button>
@@ -67,6 +66,36 @@
         </div>
         <div class="modal-footer-q">
           <span>Developed by Kirill Sedin</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  <a href="#modal-window-end" hidden="hidden" id="modalTriggerEnd">end of game</a>
+
+  <!-- Modal window for end -->
+  <div class="overlay-q" id="modal-window-end">
+    <div class="modal-q">
+      <div class="modal-content-q">
+        <div class="modal-header-q">
+          <h2 id="titleQuestion">Сongratulations</h2>
+          <a href="#close" title="close" hidden="hidden" class="clos-q" id="btnCloseEnd">&times;</a>
+        </div>
+        <div class="modal-body-q">
+          <div id="blockQuestionText" class="text-content">
+            <!-- поменять цвет spanov -->
+            <span class="main-span"><label>Your time: </label><span class="secondary-span" id="playerTime"></span></span><br />
+            <span class="main-span mt-1"><label>Count of words: </label><span class="secondary-span" id="playerWords"></span></span><br />
+            <span class="main-span mt-2"><label>Fails: </label><span class="secondary-span" id="playerFails"></span></span>
+          </div>
+          <div class="button-group mt-4">
+            <button type="button" id="restartGame" class="btn-q mr-2">Restart</button>
+            <button type="button" id="closeGame" class="btn-q">Exit</button>
+          </div>
+        </div>
+        <div class="modal-footer-q">
+          <label hidden="hidden" id="lblRestart">Restarting.....</label><span>Developed by Kirill Sedin</span>
         </div>
       </div>
     </div>

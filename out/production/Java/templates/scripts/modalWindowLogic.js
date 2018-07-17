@@ -25,11 +25,6 @@ function startQuestionModal(number, question, mainAnswer,answer1, answer2, answe
 $(".btnAnswer").each(function(key, element){
   $(element).click(function(){
     isAnswerTrue($(element).text());
-    /*console.log(element.classList);
-    $(element).removeClass('btn-q');
-    console.log(element.classList);
-    $(element).addClass('btn-q-true');
-    console.log(element.classList);*/
   });
 });
 
@@ -37,7 +32,6 @@ function isAnswerTrue(answer)
 {
   if(answer === answerForQuestion){
     changeButtonColor(getIndexOfButtonByName(answer));
-    $("#inpText").val("is answer true");
     setTimeout(function(){
       $("#btnCloseQ")[0].click();
       clearModal();
@@ -45,7 +39,7 @@ function isAnswerTrue(answer)
   }
   else{
     changeButtonColor(getIndexOfButtonByName(answerForQuestion));
-    $("#inpText").val("is answer false");
+    document.getElementsByClassName('main-time-block')[0].classList.toggle('active');
     setTime(30);
     setTimeout(function(){
       $("#btnCloseQ")[0].click();
@@ -82,15 +76,36 @@ function clearModal()
   $("#blockQuestionText").html("");
   $("#inpText").removeAttr("disabled");
   
-  if($("#answer"+getIndexOfButtonByName(answerForQuestion)).hasClass('btn-q-true')){
-    $("#inpText").val("Сообщенме");
-  }
   $("#answer"+getIndexOfButtonByName(answerForQuestion)).removeClass('btn-q-true');
   $("#answer"+getIndexOfButtonByName(answerForQuestion)).addClass('btn-q');
   for(var i=1 ;i < 5; i++) {
-
     $("#answer"+i).removeAttr("disabled");
     $("#answer"+i).text("");
   }
+}
 
-} 
+function launchFinalModal(countOfWords, fails)
+{
+  $("#modalTriggerEnd")[0].click();
+  $("#playerTime").html($("#timer").html());
+  $("#playerWords").html(countOfWords);
+  $("#playerFails").html(fails);
+  $("#inpText").attr("disabled", 'disabled');
+}
+
+function restartGame()
+{
+  document.getElementById('lblRestart').hidden = false;
+  $("#textArea").html("");
+
+  setTimeout(function(){
+    document.getElementById('lblRestart').hidden = true;
+    $("#btnStop").attr("disabled", 'disabled');
+    $("#btnStart").removeAttr("disabled");
+    $("#timer").html("00:00:00");
+    $("#btnCloseEnd")[0].click();
+  },1500)
+}
+
+
+

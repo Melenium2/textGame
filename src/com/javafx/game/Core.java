@@ -2,17 +2,14 @@ package com.javafx.game;
 
 import com.javafx.game.Helpers.QuestionParser;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 
 public class Core
 {
     private BufferedReader reader;
-    private ArrayList<String> splitedArrayForGame  = new ArrayList<>();
+    private ArrayList<String> splitedArrayForGame = new ArrayList<>();
     private int countOfWords;
     private int countWordsNow;
     private QuestionParser questionParser;
@@ -20,11 +17,10 @@ public class Core
 
     public Core() throws FileNotFoundException
     {
-        reader = new BufferedReader(new FileReader("text.txt"));
         questionParser = new QuestionParser();
     }
 
-    public void SplitArray(String text)
+    private void SplitArray(String text)
     {
         String[] splitArray = text.split(" ");
         for (String s : splitArray) {
@@ -33,8 +29,16 @@ public class Core
         }
     }
 
-    public ArrayList<String> getFileContent()
+    public ArrayList<String> getFileContent() throws FileNotFoundException
     {
+        countWordsNow = 0;
+        countOfWords = 0;
+
+        try {
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream("text.txt"), "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         ArrayList<String> fileArray = new ArrayList<>();
         Integer index = 0;
         try {
@@ -78,5 +82,4 @@ public class Core
         countWordsNow++;
         splitedArrayForGame.remove(0);
     }
-
 }

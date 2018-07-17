@@ -96,6 +96,18 @@
 {
   padding-left: 15px;
   margin-top: 25px;
+  font-size: 30px;
+}
+
+.modal-q .modal-body-q .text-content .main-span
+{
+  position: absolute;
+  background: none;
+}
+
+.modal-q .modal-body-q .text-content .secondary-span
+{
+  background: none;
 }
 
 .modal-q .modal-body-q .button-group
@@ -114,12 +126,13 @@
 {
   width: 90px;
   height: 50px;
-  font-weight: 200px;
+  font-weight: 400;
   color: #fff;
+  text-align: center;
   padding: 10px;
   border-radius: 7px;
   outline: none;
-  border:solid 1px #E0CC2E;
+  border:solid 1px #CA539F;
   background: #9A639C;
 }
 
@@ -127,7 +140,7 @@
 {
   background: #BF3FC6;
   box-shadow: 2px 2px 20px #808080;
-  border:solid 1px #E02E3A;
+  border:solid 1px #fff;
 }
 
 .btn-q:disabled
@@ -136,29 +149,44 @@
   border:solid 1px #fff;
 }
 
+.btn-q:disabled:hover
+{
+  background: #CC6861;
+  box-shadow: 2px 2px 20px #808080;
+  border:solid 1px #fff;
+}
+
 .btn-q-true
 {
 width: 90px;
 height: 50px;
-font-weight: 200px;
+font-weight: 400px;
+text-align: center;
 color: #fff;
 padding: 10px;
 border-radius: 7px;
 outline: none;
-border:solid 1px #E0CC2E;
+border:solid 1px #fff;
 background: #6EE02E;
 }
 
 .btn-q-true:hover
 {
-  background: #70C445;
+  background: #42A008;
   box-shadow: 2px 2px 20px #808080;
-  border:solid 1px #E02E3A;
+  border:solid 1px #000;
 }
 
 .btn-q-true:disabled
 {
-  background: #70C445;
+  background: #6EE02E;
+  border:solid 1px #fff;
+}
+
+.btn-q-true:disabled:hover
+{
+  background: #42A008;
+  box-shadow: 2px 2px 20px #808080;
   border:solid 1px #fff;
 }
 
@@ -178,19 +206,34 @@ background: #6EE02E;
 
 .modal-q .modal-footer-q > span
 {
+  position: absolute;
   margin-left: 70%;
-  padding-top: 10px;
+  padding-top: 5px;
   z-index: 4;
   font-size: 10px;
   background: none;
 }
 
+.modal-q .modal-footer-q > label
+{
+  position: absolute;
+  font-size: 14px;
+  padding-top: 5px;
+  padding-left: 15px;
+}
+
 @keyframes scaleAndSwing
 {
-  0%{transform: scale(0.1) rotateZ(72deg); opacity: 0;}
-  25%{transform: scale(0.25) rotateZ(144deg);}
-  50%{transform: scale(0.5) rotateZ(216deg);}
-  75%{transform: scale(0.75) rotateZ(288deg);}
+  0%{transform: scale(0.0) rotateZ(36deg); opacity: 0;}
+  10%{transform: scale(0.1) rotateZ(72deg); }
+  20%{transform: scale(0.2) rotateZ(108deg); }
+  30%{transform: scale(0.3) rotateZ(144deg); }
+  40%{transform: scale(0.4) rotateZ(180deg); }
+  50%{transform: scale(0.5) rotateZ(216deg); }
+  60%{transform: scale(0.6) rotateZ(252deg);}
+  70%{transform: scale(0.7) rotateZ(288deg);}
+  80%{transform: scale(0.8) rotateZ(324deg);}
+  90%{transform: scale(0.9) rotateZ(360deg);}
   100%{transform: scale(1) rotateZ(360deg); opacity: 1;}
 }
 

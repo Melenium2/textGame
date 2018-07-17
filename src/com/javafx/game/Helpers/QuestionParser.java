@@ -1,16 +1,18 @@
 package com.javafx.game.Helpers;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 public class QuestionParser {
     private ArrayList<String> text;
 
     public QuestionParser() throws FileNotFoundException {
-        BufferedReader reader = new BufferedReader(new FileReader(("questions.txt")));
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream("questions.txt"), "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         text = new ArrayList<>();
         try {
             while (reader.ready()) {
@@ -50,6 +52,16 @@ public class QuestionParser {
                                              numberOfQuestion[1].lastIndexOf("\""));
     }
 
+    public int getQuestionCount()
+    {
+        int count = 0;
+        for(String str: text){
+            if(str.contains("number:")){
+                count++;
+            }
+        }
+        return count;
+    }
     public QuestionModel getQuestion(int number)
     {
         return getQuestionFromFile(number);
